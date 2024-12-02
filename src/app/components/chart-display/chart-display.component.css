@@ -1,0 +1,25 @@
+.chart-container {
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
+  }
+  .loading {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+  }
+  .error {
+    color: red;
+    padding: 10px;
+    text-align: center;
+  }
+  .chart {
+    max-width: 100%;
+    overflow: auto;
+  }
+  .chart img {
+    max-width: 100%;
+    height: auto;
+  }
