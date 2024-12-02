@@ -1,0 +1,11 @@
+<div class="chart-container">
+    <div *ngIf="isLoading" class="loading">
+      正在生成图表...
+    </div>
+    <div *ngIf="error" class="error">
+      {{ error }}
+    </div>
+    <div *ngIf="chartData" class="chart">
+      <img [src]="'data:image/png;base64,' + chartData" alt="数据可视化图表">
+    </div>
+  </div>

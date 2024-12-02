@@ -1,1 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
+/* 全局样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+  }
+  
+  /* 表单元素的全局样式 */
+  input, textarea {
+    font-family: inherit;
+    font-size: inherit;
+  }
+  
+  /* 按钮的全局样式 */
+  button {
+    cursor: pointer;
+  }
