@@ -29,11 +29,11 @@ export class ChartDisplayComponent implements OnInit {
 
   onSendQuery() {
     if (!this.query.trim()) return;
-    
+  
     this.isLoading = true;
     this.error = null;
     
-    this.analysisService.analyzeFiles([], this.query, '', true).subscribe({
+    this.analysisService.analyzeQuery(this.query).subscribe({
       next: () => {
         this.query = '';
         this.isLoading = false;
