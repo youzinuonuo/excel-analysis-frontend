@@ -3,7 +3,13 @@
     <h1>Excel数据分析与可视化</h1>
   </header>
   <main>
-    <app-file-upload></app-file-upload>
-    <app-chart-display></app-chart-display>
+    <div class="split-layout">
+      <div class="upload-section">
+        <app-file-upload></app-file-upload>
+      </div>
+      <div class="chat-section">
+        <app-chart-display></app-chart-display>
+      </div>
+    </div>
   </main>
 </div>

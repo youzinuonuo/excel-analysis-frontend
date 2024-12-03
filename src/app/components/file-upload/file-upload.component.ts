@@ -13,34 +13,16 @@ import { AnalysisService } from '../../services/analysis.service';
 export class FileUploadComponent {
   selectedFiles: File[] = [];
   apiKey: string = '';
-  query: string = '';
   usePandasAi: boolean = true;
 
   constructor(private analysisService: AnalysisService) {}
 
   onFileSelect(event: any) {
-    this.selectedFiles = Array.from(event.target.files);
+    const newFiles = Array.from(event.target.files) as File[];
+    this.selectedFiles = [...this.selectedFiles, ...newFiles];
   }
 
-  onAnalyze() {
-    if (this.selectedFiles.length === 0) {
-      alert('请选择文件');
-      return;
-    }
-
-    this.analysisService.analyzeFiles(
-      this.selectedFiles, 
-      this.query, 
-      this.apiKey,
-      this.usePandasAi
-    ).subscribe({
-      next: (response) => {
-        this.analysisService.updateChartData(response.chart_data);
-      },
-      error: (error) => {
-        console.error('分析失败:', error);
-        alert('分析失败，请重试');
-      }
-    });
+  removeFile(index: number) {
+    this.selectedFiles = this.selectedFiles.filter((_, i) => i !== index);
   }
 }

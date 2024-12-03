@@ -1,11 +1,31 @@
-<div class="chart-container">
-    <div *ngIf="isLoading" class="loading">
-      正在生成图表...
-    </div>
-    <div *ngIf="error" class="error">
-      {{ error }}
-    </div>
-    <div *ngIf="chartData" class="chart">
-      <img [src]="'data:image/png;base64,' + chartData" alt="数据可视化图表">
+<div class="chat-container">
+  <div class="messages">
+    <div *ngFor="let message of chatHistory" class="message" [ngClass]="message.type">
+      <div class="message-content">
+        <ng-container *ngIf="message.type === 'user'">
+          <div class="query">{{ message.text }}</div>
+        </ng-container>
+        <ng-container *ngIf="message.type === 'response'">
+          <div *ngIf="message.chartData" class="chart">
+            <img [src]="'data:image/png;base64,' + message.chartData" alt="数据可视化图表">
+          </div>
+          <div *ngIf="message.text" class="text">{{ message.text }}</div>
+        </ng-container>
+      </div>
     </div>
   </div>
+  
+  <div class="input-area">
+    <textarea [(ngModel)]="query" placeholder="请输入您的分析需求" class="query-input"></textarea>
+    <button (click)="onSendQuery()" class="send-button" [disabled]="!query.trim()">
+      发送
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="loading">
+    正在分析...
+  </div>
+  <div *ngIf="error" class="error">
+    {{ error }}
+  </div>
+</div>

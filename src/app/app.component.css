@@ -8,10 +8,32 @@
     color: white;
     padding: 1rem;
     text-align: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 100;
   }
   
   main {
+    padding-top: 70px;
+    height: calc(100vh - 70px);
+  }
+  
+  .split-layout {
+    display: flex;
+    height: 100%;
+  }
+  
+  .upload-section {
+    width: 40%;
+    border-right: 1px solid #ddd;
+    background: white;
     padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
+    overflow-y: auto;
+  }
+  
+  .chat-section {
+    width: 60%;
+    background: #f9f9f9;
+    overflow-y: auto;
   }

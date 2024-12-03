@@ -4,14 +4,21 @@
       <input type="file" multiple (change)="onFileSelect($event)" accept=".xlsx,.xls,.csv" class="form-control">
     </div>
     
-    <div class="form-group">
-      <label>API Key:</label>
-      <input type="text" [(ngModel)]="apiKey" placeholder="请输入API Key" class="form-control">
+    <div class="uploaded-files" *ngIf="selectedFiles.length > 0">
+      <h3>已上传文件：</h3>
+      <div class="file-list">
+        <div *ngFor="let file of selectedFiles; let i = index" class="file-item">
+          <span class="file-name">{{ file.name }}</span>
+          <button class="remove-btn" (click)="removeFile(i)">
+            ✕
+          </button>
+        </div>
+      </div>
     </div>
     
     <div class="form-group">
-      <label>分析需求：</label>
-      <textarea [(ngModel)]="query" placeholder="请输入您的分析需求" class="form-control"></textarea>
+      <label>API Key:</label>
+      <input type="text" [(ngModel)]="apiKey" placeholder="请输入API Key" class="form-control">
     </div>
     
     <div class="form-group">
@@ -19,6 +26,4 @@
             <input type="checkbox" [(ngModel)]="usePandasAi"> 使用PandasAI模式
         </label>
     </div>
-    
-    <button (click)="onAnalyze()" class="btn-analyze">开始分析</button>
 </div>

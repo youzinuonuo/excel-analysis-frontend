@@ -1,30 +1,62 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
+
+export interface ChatMessage {
+  type: 'user' | 'response';
+  text?: string;
+  chartData?: string;
+  timestamp: Date;
+}
+
+export interface AnalysisResponse {
+  text?: string;
+  chart_data?: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AnalysisService {
-  private apiUrl = 'http://localhost:8000/api';
-  private chartDataSubject = new Subject<string>();
-  chartData$ = this.chartDataSubject.asObservable();
+  private chatHistorySubject = new BehaviorSubject<ChatMessage[]>([]);
+  chatHistory$ = this.chatHistorySubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
-  analyzeFiles(files: File[], query: string, apiKey: string, usePandasAi: boolean = true): Observable<any> {
-    const formData = new FormData();
-    files.forEach(file => {
-      formData.append('files', file);
+  analyzeFiles(files: File[], query: string, apiKey: string, usePandasAi: boolean): Observable<AnalysisResponse> {
+    this.addMessage({
+      type: 'user',
+      text: query,
+      timestamp: new Date()
     });
+
+    const formData = new FormData();
+    files.forEach(file => formData.append('files', file));
     formData.append('query', query);
     formData.append('api_key', apiKey);
-    formData.append('use_pandas_ai', usePandasAi.toString());
+    formData.append('use_pandas_ai', String(usePandasAi));
 
-    return this.http.post(`${this.apiUrl}/analyze`, formData);
+    return new Observable<AnalysisResponse>(observer => {
+      this.http.post<AnalysisResponse>('/api/analyze', formData).subscribe({
+        next: (response: AnalysisResponse) => {
+          this.addMessage({
+            type: 'response',
+            text: response.text,
+            chartData: response.chart_data,
+            timestamp: new Date()
+          });
+          observer.next(response);
+          observer.complete();
+        },
+        error: (error) => {
+          observer.error(error);
+        }
+      });
+    });
   }
 
-  updateChartData(data: string) {
-    this.chartDataSubject.next(data);
+  private addMessage(message: ChatMessage) {
+    const currentHistory = this.chatHistorySubject.value;
+    this.chatHistorySubject.next([...currentHistory, message]);
   }
 }
