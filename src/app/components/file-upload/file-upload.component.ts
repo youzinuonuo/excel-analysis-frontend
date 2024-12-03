@@ -12,8 +12,8 @@ import { AnalysisService } from '../../services/analysis.service';
 })
 export class FileUploadComponent {
   selectedFiles: File[] = [];
+  tableNames: string[] = [];
   apiKey: string = '';
-  usePandasAi: boolean = true;
   isAnalyzing = false;
   error: string | null = null;
 
@@ -23,11 +23,16 @@ export class FileUploadComponent {
     if (this.isAnalyzing) return;
     const newFiles = Array.from(event.target.files) as File[];
     this.selectedFiles = [...this.selectedFiles, ...newFiles];
+    newFiles.forEach(file => {
+      const defaultTableName = file.name.replace(/\.[^/.]+$/, "");
+      this.tableNames.push(defaultTableName);
+    });
   }
 
   removeFile(index: number) {
     if (this.isAnalyzing) return;
     this.selectedFiles = this.selectedFiles.filter((_, i) => i !== index);
+    this.tableNames = this.tableNames.filter((_, i) => i !== index);
   }
 
   startAnalysis() {
@@ -36,13 +41,20 @@ export class FileUploadComponent {
     this.isAnalyzing = true;
     this.error = null;
     
+    const formData = new FormData();
+    this.selectedFiles.forEach((file, index) => {
+      formData.append(`files`, file);
+      formData.append(`table_names`, this.tableNames[index] || '');
+    });
+    formData.append('api_key', this.apiKey);
+    
     this.analysisService.startNewAnalysis(
-      this.selectedFiles,
-      this.apiKey,
-      this.usePandasAi
+      formData,
+      this.apiKey
     ).subscribe({
-      next: () => {
+      next: (response) => {
         this.isAnalyzing = false;
+        console.log('分析结果:', response);
       },
       error: (error) => {
         this.error = '分析初始化失败，请重试';
