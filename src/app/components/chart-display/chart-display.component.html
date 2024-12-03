@@ -9,7 +9,7 @@
           <div *ngIf="message.chartData" class="chart">
             <img [src]="'data:image/png;base64,' + message.chartData" alt="数据可视化图表">
           </div>
-          <div *ngIf="message.text" class="text">{{ message.text }}</div>
+          <div *ngIf="message.text" class="text" [innerHTML]="formatText(message.text)"></div>
         </ng-container>
       </div>
     </div>

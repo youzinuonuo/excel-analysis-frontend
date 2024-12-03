@@ -54,4 +54,8 @@ export class ChartDisplayComponent implements OnInit {
       }
     });
   }
+
+  formatText(text: string): string {
+    return text.replace(/\n/g, '<br>');
+  }
 }
